@@ -1,8 +1,8 @@
 <template>
   <q-page>
-    <ApagarDados v-if="step == 1" />
-    <ConfirmarApagarDados v-else-if="step == 2" />
-    <DesistiuApagarDados v-else-if="step == 3" />
+    <ApagarDados v-if="step == 1" @mudarStep="mudarStep" />
+    <ConfirmarApagarDados v-else-if="step == 2" @mudarStep="mudarStep" />
+    <DesistiuApagarDados v-else-if="step == 3" @mudarStep="mudarStep" />
   </q-page>
 </template>
 <script>
@@ -14,8 +14,13 @@ import DesistiuApagarDados from "components/DesistiuApagarDados.vue";
 export default {
   components: { ApagarDados, ConfirmarApagarDados, DesistiuApagarDados },
   setup() {
+    const step = ref(1);
+    async function mudarStep(val) {
+      step.value = val;
+    }
     return {
-      step: ref(3),
+      mudarStep,
+      step,
       dados: ref({
         nome: "",
       }),

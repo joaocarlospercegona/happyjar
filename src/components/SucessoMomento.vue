@@ -1,14 +1,6 @@
 <template>
-  <q-layout class="flex flex-center">
-    <div
-      class="q-pa-md"
-      style="
-        background-color: #fee2b4;
-        width: 90vw;
-        height: 60vh;
-        margin-top: -30vh;
-      "
-    >
+  <div class="sucesso-page">
+    <div class="sucesso-card">
       <div class="col-12 flex flex-center text-primary text-bold text-h6">
         Sua Felicidade está guardada!
       </div>
@@ -29,7 +21,7 @@
         />
       </div>
     </div>
-  </q-layout>
+  </div>
 </template>
 
 <script>
@@ -69,3 +61,25 @@ export default defineComponent({
   },
 });
 </script>
+
+<style scoped>
+.sucesso-page {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  margin-top: -60px;
+  overflow: hidden;
+}
+
+.sucesso-card {
+  background-color: #fee2b4;
+  border-radius: 10px;
+  padding: 30px 20px;
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+</style>

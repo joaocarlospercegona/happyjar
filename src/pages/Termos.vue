@@ -1,10 +1,7 @@
 <template>
-  <q-page class="q-pa-lg">
-    <div class="">
-      <div
-        class="q-pa-md row q-gutter-y-md"
-        style="background-color: #fee2b4; min-height: 93vh"
-      >
+  <q-page class="termos-page">
+    <div class="termos-container">
+      <div class="termos-content q-pa-md">
         <div class="text-bold text-black text-center">
           TERMOS E CONDIÇÕES GERAIS DE USO DO APLICATIVO
         </div>
@@ -509,28 +506,95 @@
   </q-page>
 </template>
 <script>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
+import { useQuasar } from "quasar";
+import ApiService from "src/services/api";
+
 export default {
   setup() {
     const router = useRouter();
-    let concordo = ref(true);
+    const $q = useQuasar();
+    let concordo = ref(false);
+    let carregando = ref(false);
+
+    // Verifica se o usuário já aceitou os termos
+    onMounted(() => {
+      const usuarioLocal = localStorage.getItem('usuario');
+      if (usuarioLocal) {
+        const usuario = JSON.parse(usuarioLocal);
+        if (usuario.acceptedTerms === true) {
+          concordo.value = true;
+        }
+      }
+    });
+
     async function avancar() {
-      router.push("/momento");
+      try {
+        carregando.value = true;
+
+        // Envia para o backend que o usuário aceitou os termos
+        const resposta = await ApiService.usuario.aceitarTermos();
+
+        if (resposta.data.sucesso) {
+          // Atualiza o usuário no localStorage
+          const usuarioLocal = localStorage.getItem('usuario');
+          if (usuarioLocal) {
+            const usuario = JSON.parse(usuarioLocal);
+            usuario.acceptedTerms = true;
+            usuario.acceptedTermsAt = new Date().toISOString();
+            localStorage.setItem('usuario', JSON.stringify(usuario));
+          }
+
+          $q.notify({
+            message: 'Termos aceitos com sucesso!',
+            color: 'positive',
+            icon: 'check_circle',
+            timeout: 1500
+          });
+
+          router.push("/momento");
+        }
+      } catch (error) {
+        console.error('Erro ao aceitar termos:', error);
+
+        $q.notify({
+          message: error.response?.data?.erro || 'Erro ao aceitar termos. Tente novamente.',
+          color: 'negative',
+          icon: 'error'
+        });
+      } finally {
+        carregando.value = false;
+      }
     }
+
     return {
       concordo,
+      carregando,
       avancar,
     };
   },
 };
 </script>
 <style scoped>
-.imagem-centro {
-  position: fixed;
-  top: 0;
-  bottom: 30vh;
-  left: 0;
-  right: 0;
+.termos-page {
+  height: 100vh;
+  width: 100vw;
+  padding: 20px;
+  overflow: hidden;
+}
+
+.termos-container {
+  height: 100%;
+  background-color: #fee2b4;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.termos-content {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 </style>

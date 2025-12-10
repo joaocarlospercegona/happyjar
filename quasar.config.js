@@ -11,7 +11,7 @@
 const { configure } = require("quasar/wrappers");
 const path = require("path");
 
-module.exports = configure(function (/* ctx */) {
+module.exports = configure(function (ctx) {
   return {
     // https://v2.quasar.dev/quasar-cli-vite/prefetch-feature
     // preFetch: true,
@@ -19,7 +19,7 @@ module.exports = configure(function (/* ctx */) {
     // app boot file (/src/boot)
     // --> boot files are part of "main.js"
     // https://v2.quasar.dev/quasar-cli-vite/boot-files
-    boot: ["i18n", "axios"],
+    boot: ["i18n", "axios", "resources"],
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#css
     css: ["app.sass"],
@@ -40,12 +40,14 @@ module.exports = configure(function (/* ctx */) {
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#build
     build: {
-      target: {
-        browser: ["es2019", "edge88", "firefox78", "chrome87", "safari13.1"],
-        node: "node16",
-      },
-
-      vueRouterMode: "hash", // available values: 'hash', 'history'
+      vueRouterMode: 'history', // available values: 'hash', 'history'
+      env: ctx.dev
+        ? {
+          API_URL: 'http://localhost:3333'
+        }
+        : {
+          API_URL: 'https://api.happyjar.com' // URL de produção (altere quando tiver)
+        },
       // vueRouterBase,
       // vueDevtools,
       // vueOptionsAPI: false,
@@ -84,8 +86,11 @@ module.exports = configure(function (/* ctx */) {
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#devServer
     devServer: {
-      // https: true
-      open: true, // opens browser window automatically
+      server: {
+        type: 'http'
+      },
+      port: 8080,
+      open: true // opens browser window automatically
     },
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#framework
@@ -103,7 +108,7 @@ module.exports = configure(function (/* ctx */) {
       // directives: [],
 
       // Quasar plugins
-      plugins: [],
+      plugins: ['Notify', 'Loading', 'Dialog'],
     },
 
     // animations: 'all', // --- includes all animations
@@ -134,13 +139,14 @@ module.exports = configure(function (/* ctx */) {
 
       // manualStoreHydration: true,
       // manualPostHydrationTrigger: true,
-
+      maxAge: 1000 * 60 * 60 * 24 * 30,
       prodPort: 3000, // The default port that the production server should use
       // (gets superseded if process.env.PORT is specified at runtime)
 
       middlewares: [
-        "render", // keep this as last one
-      ],
+        ctx.prod ? 'compression' : '',
+        'render' // keep this as last one
+      ]
     },
 
     // https://v2.quasar.dev/quasar-cli-vite/developing-pwa/configuring-pwa

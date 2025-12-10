@@ -17,6 +17,16 @@
     <div class="col-12 flex flex-center q-pa-lg">
       <q-img src="images/feliz.png" style="max-width: 50vw; max-height: 50vh" />
     </div>
+    <div class="col-12 flex flex-center q-px-md q-py-sm">
+      <q-btn
+        class="full-width"
+        label="Voltar"
+        color="primary"
+        no-caps
+        dense
+        @click="$router.push('/momento')"
+      />
+    </div>
   </div>
 </template>
 
@@ -24,27 +34,6 @@
 import { defineComponent } from "vue";
 
 export default defineComponent({
-  name: "EssentialLink",
-  props: {
-    title: {
-      type: String,
-      required: true,
-    },
-
-    caption: {
-      type: String,
-      default: "",
-    },
-
-    link: {
-      type: String,
-      default: "#",
-    },
-
-    icon: {
-      type: String,
-      default: "",
-    },
-  },
+  name: "DesistiuApagarDados",
 });
 </script>

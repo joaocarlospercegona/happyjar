@@ -27,6 +27,7 @@
         outlined
         no-caps
         dense
+        @click="$emit('mudarStep', 3)"
       />
     </div>
     <div class="col-12 flex flex-center q-px-md">
@@ -37,6 +38,7 @@
         outline
         no-caps
         dense
+        @click="$emit('mudarStep', 2)"
       />
     </div>
   </div>
@@ -46,27 +48,7 @@
 import { defineComponent } from "vue";
 
 export default defineComponent({
-  name: "EssentialLink",
-  props: {
-    title: {
-      type: String,
-      required: true,
-    },
-
-    caption: {
-      type: String,
-      default: "",
-    },
-
-    link: {
-      type: String,
-      default: "#",
-    },
-
-    icon: {
-      type: String,
-      default: "",
-    },
-  },
+  name: "ApagarDados",
+  emits: ['mudarStep'],
 });
 </script>

@@ -2,7 +2,12 @@ const routes = [
   {
     path: "/",
     component: () => import("layouts/LoginLayout.vue"),
-    children: [{ path: "", component: () => import("pages/BoasVindas.vue") }],
+    children: [{ path: "", component: () => import("pages/SplashScreen.vue") }],
+  },
+  {
+    path: "/login",
+    component: () => import("layouts/LoginLayout.vue"),
+    children: [{ path: "", component: () => import("pages/login.vue") }],
   },
   {
     path: "/boasVindas",
@@ -28,6 +33,11 @@ const routes = [
     path: "/apagarDados",
     component: () => import("layouts/PrincipalLayout.vue"),
     children: [{ path: "", component: () => import("pages/ApagarDados.vue") }],
+  },
+  {
+    path: "/verFelicidade",
+    component: () => import("layouts/PrincipalLayout.vue"),
+    children: [{ path: "", component: () => import("pages/VerFelicidade.vue") }],
   },
   {
     path: "/:catchAll(.*)*",

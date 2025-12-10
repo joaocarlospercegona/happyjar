@@ -29,6 +29,7 @@
         outlined
         no-caps
         dense
+        @click="$emit('mudarStep', 3)"
       />
     </div>
     <div class="col-12 flex flex-center q-px-md">
@@ -39,36 +40,91 @@
         outline
         no-caps
         dense
+        @click="apagarConta"
+        :loading="carregando"
+        :disable="carregando"
       />
     </div>
   </div>
 </template>
 
 <script>
-import { defineComponent } from "vue";
+import { defineComponent, ref } from "vue";
+import { useRouter } from "vue-router";
+import { useQuasar } from 'quasar';
+import ApiService from 'src/services/api';
 
 export default defineComponent({
-  name: "EssentialLink",
-  props: {
-    title: {
-      type: String,
-      required: true,
-    },
+  name: "ConfirmarApagarDados",
+  emits: ['mudarStep'],
+  setup(props, context) {
+    const router = useRouter();
+    const $q = useQuasar();
+    const carregando = ref(false);
 
-    caption: {
-      type: String,
-      default: "",
-    },
+    async function apagarConta() {
+      try {
+        carregando.value = true;
 
-    link: {
-      type: String,
-      default: "#",
-    },
+        const token = localStorage.getItem('token');
+        if (!token) {
+          $q.notify({
+            message: 'Você precisa fazer login',
+            color: 'negative',
+            icon: 'error'
+          });
+          return;
+        }
 
-    icon: {
-      type: String,
-      default: "",
-    },
+        // Chama DELETE /api/usuarios/me usando o serviço
+        const resposta = await ApiService.usuario.deletar();
+
+        if (resposta.data.sucesso) {
+          $q.notify({
+            message: 'Sua conta foi deletada permanentemente',
+            color: 'positive',
+            icon: 'check_circle'
+          });
+
+          // Limpa todos os dados do localStorage
+          localStorage.removeItem('usuario');
+          localStorage.removeItem('token');
+          localStorage.clear();
+
+          // Aguarda 1 segundo e redireciona para tela de boas vindas
+          setTimeout(() => {
+            router.push('/boasVindas');
+          }, 1000);
+        }
+      } catch (error) {
+        console.error('Erro ao apagar conta:', error);
+
+        if (error.response?.status === 401) {
+          $q.notify({
+            message: 'Sessão expirada. Faça login novamente.',
+            color: 'negative',
+            icon: 'error'
+          });
+
+          // Limpa localStorage e redireciona
+          localStorage.clear();
+          router.push('/boasVindas');
+        } else {
+          $q.notify({
+            message: 'Erro ao apagar conta. Tente novamente.',
+            color: 'negative',
+            icon: 'error'
+          });
+        }
+      } finally {
+        carregando.value = false;
+      }
+    }
+
+    return {
+      carregando,
+      apagarConta,
+    };
   },
 });
 </script>

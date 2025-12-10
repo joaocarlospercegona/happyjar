@@ -1,0 +1,18 @@
+{
+  "appId": "com.happyjar.app",
+  "appName": "HappyJar App",
+  "webDir": "www",
+  "server": {
+    "androidScheme": "https"
+  },
+  "plugins": {
+    "GoogleAuth": {
+      "scopes": [
+        "profile",
+        "email"
+      ],
+      "serverClientId": "361004843516-a53aavo3qjmn4b80dm7fhuvkls7b433c.apps.googleusercontent.com",
+      "forceCodeForRefreshToken": true
+    }
+  }
+}

@@ -1,20 +1,7 @@
 <template>
-  <div
-    class="row justify-center"
-    style="
-      margin-left: 5vw;
-      margin-right: 5vw;
-      margin-top: 15vh;
-      background-color: #fee2b4;
-      width: 90vw;
-      height: 40vh;
-    "
-  >
-    <div class="flex justify-center q-py-xl">
-      <div
-        class="row justify-center"
-        style="width: 70vw; height: 21.5vh; background-color: white"
-      >
+  <div class="gravar-momento-page">
+    <div class="momento-card">
+      <div class="input-container">
         <div class="col-12">
           <q-input
             class="col-12"
@@ -36,9 +23,9 @@
         </div>
       </div>
     </div>
-  </div>
-  <div class="row justify-center flex flex-center justify-center q-py-xl">
-    <q-img src="images/logo horizontal.png" style="width: 70vw" />
+    <div class="logo-container">
+      <q-img src="images/logo horizontal.png" class="logo-image" />
+    </div>
   </div>
 </template>
 
@@ -59,3 +46,46 @@ export default defineComponent({
   },
 });
 </script>
+
+<style scoped>
+.gravar-momento-page {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 20px;
+  padding-bottom: 250px;
+  overflow: hidden;
+}
+
+.momento-card {
+  background-color: #fee2b4;
+  border-radius: 10px;
+  padding: 30px 20px;
+  flex: 0 0 auto;
+}
+
+.input-container {
+  background-color: white;
+  padding: 15px;
+  border-radius: 8px;
+}
+
+.logo-container {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  padding-bottom: 40px;
+}
+
+.logo-image {
+  width: 200px;
+  max-width: 70vw;
+}
+</style>
