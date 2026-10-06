@@ -1,6 +1,6 @@
 {
-  "appId": "com.happyjar.app",
-  "appName": "HappyJar App",
+  "appId": "org.cordova.happyjar.rafa",
+  "appName": "Happiness Jar App",
   "webDir": "www",
   "server": {
     "androidScheme": "https"
@@ -11,7 +11,9 @@
         "profile",
         "email"
       ],
-      "serverClientId": "361004843516-a53aavo3qjmn4b80dm7fhuvkls7b433c.apps.googleusercontent.com",
+      "clientId": "678126218746-i1hp2urjurqsr8itfohcib6r6eq0top3.apps.googleusercontent.com",
+      "androidClientId": "678126218746-i1hp2urjurqsr8itfohcib6r6eq0top3.apps.googleusercontent.com",
+      "serverClientId": "678126218746-i1hp2urjurqsr8itfohcib6r6eq0top3.apps.googleusercontent.com",
       "forceCodeForRefreshToken": true
     }
   }

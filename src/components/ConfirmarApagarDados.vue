@@ -1,6 +1,6 @@
 <template>
   <div
-    style="margin: 5vw; background-color: #fee2b4; width: 90vw; height: 80vh"
+    style="margin: 5vw; background-color: #fee2b4; width: 90vw; height: 80vh; border-radius: 10px"
   >
     <div
       class="col-12 flex flex-center text-primary text-center text-bold text-h6 q-py-md"

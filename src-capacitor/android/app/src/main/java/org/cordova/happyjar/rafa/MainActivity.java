@@ -1,4 +1,4 @@
-package com.happyjar.app;
+package org.cordova.happyjar.rafa;
 
 import com.getcapacitor.BridgeActivity;
 

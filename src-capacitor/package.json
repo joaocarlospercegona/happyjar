@@ -1,13 +1,14 @@
 {
-  "name": "happyjar",
+  "name": "Happiness Jar",
   "version": "0.0.1",
-  "description": "A HappyJar Project",
+  "description": "A Happiness Jar Project",
   "author": "joaocarlospercegona <joaokarlospercegona@gmail.com>",
   "private": true,
   "dependencies": {
     "@capacitor/android": "^5.7.8",
     "@capacitor/app": "^5.0.0",
     "@capacitor/cli": "^5.0.0",
-    "@capacitor/core": "^5.0.0"
+    "@capacitor/core": "^5.0.0",
+    "@codetrix-studio/capacitor-google-auth": "^3.4.0-rc.4"
   }
 }

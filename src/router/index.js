@@ -1,6 +1,7 @@
 import { route } from 'quasar/wrappers'
 import { createRouter, createMemoryHistory, createWebHistory, createWebHashHistory } from 'vue-router'
 import routes from './routes'
+import { hasValidSession } from 'src/services/session'
 
 /*
  * If not building with SSR mode, you can
@@ -28,9 +29,7 @@ export default route(function (/* { store, ssrContext } */) {
 
   // Guard de navegação - protege rotas que precisam de autenticação
   Router.beforeEach((to, from, next) => {
-    const token = localStorage.getItem('token');
-    const usuario = localStorage.getItem('usuario');
-    const isLoggedIn = token && usuario;
+    const isLoggedIn = hasValidSession();
 
     // Rotas públicas que não precisam de login
     const publicRoutes = ['/', '/login', '/boasVindas', '/termos'];

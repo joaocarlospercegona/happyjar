@@ -1,16 +1,18 @@
 <template>
   <div class="sucesso-page">
     <div class="sucesso-card">
-      <div class="col-12 flex flex-center text-primary text-bold text-h6">
+      <div
+        class="sucesso-title col-12 flex flex-center text-primary text-bold text-h6"
+      >
         Sua Felicidade está guardada!
       </div>
-      <div class="col-12 flex flex-center">
+      <div class="sucesso-image col-12 flex flex-center">
         <q-img
           src="images/feliz.png"
           style="max-width: 70vw; max-height: 50vh"
         />
       </div>
-      <div class="col-12 q-py-lg">
+      <div class="sucesso-action col-12">
         <q-btn
           class="full-width"
           color="primary"
@@ -52,7 +54,6 @@ export default defineComponent({
   },
   setup(props, context) {
     async function confirmar() {
-      console.log("to aqui");
       context.emit("voltarInicio", 1);
     }
     return {
@@ -81,5 +82,17 @@ export default defineComponent({
   width: 100%;
   max-width: 400px;
   text-align: center;
+}
+
+.sucesso-title {
+  margin-bottom: 34px;
+}
+
+.sucesso-image {
+  margin-bottom: 44px;
+}
+
+.sucesso-action {
+  padding-bottom: 8px;
 }
 </style>

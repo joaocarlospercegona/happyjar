@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { expireSession, hasValidSession } from './session';
 
 // Pega a URL do backend do quasar.config.js
 const API_URL = process.env.API_URL || 'http://localhost:3333';
@@ -15,7 +16,12 @@ const api = axios.create({
 // Interceptor para adicionar token automaticamente em todas as requisições
 api.interceptors.request.use(
   (config) => {
+    if (config.url === '/api/auth/google') return config;
     const token = localStorage.getItem('token');
+    if (token && !hasValidSession()) {
+      return Promise.reject(new axios.CanceledError('Sessão expirada'));
+    }
+    config.sessionToken = token;
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -33,10 +39,8 @@ api.interceptors.response.use(
   },
   (error) => {
     // Se erro 401 (não autorizado), limpa token e redireciona para login
-    if (error.response?.status === 401) {
-      localStorage.removeItem('token');
-      localStorage.removeItem('usuario');
-      // Poderia redirecionar aqui, mas vamos deixar o componente decidir
+    if (error.response?.status === 401 && error.config?.sessionToken) {
+      expireSession(error.config.sessionToken);
     }
     return Promise.reject(error);
   }

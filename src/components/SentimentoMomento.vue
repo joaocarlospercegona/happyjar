@@ -2,7 +2,7 @@
   <div class="sentimento-page">
     <div class="sentimento-card">
       <div class="text-center text-primary text-bold text-h6 q-mb-md">
-        Como você se sente no agora?
+        Como você se sente agora?
       </div>
       <div class="emojis-container q-mb-md">
         <q-img
@@ -86,7 +86,6 @@ export default defineComponent({
         const resposta = await ApiService.sentimentos.registrar(escolhido.value);
 
         if (resposta.data.sucesso) {
-          console.log('Sentimento salvo:', resposta.data.sentimento);
 
           $q.notify({
             message: 'Sentimento registrado com sucesso!',
@@ -123,7 +122,6 @@ export default defineComponent({
     }
 
     function pularSentimento() {
-      console.log('Usuário pulou o registro de sentimento');
       // Volta para o início sem salvar
       context.emit("voltarInicio", 1);
     }

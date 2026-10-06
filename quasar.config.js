@@ -19,7 +19,7 @@ module.exports = configure(function (ctx) {
     // app boot file (/src/boot)
     // --> boot files are part of "main.js"
     // https://v2.quasar.dev/quasar-cli-vite/boot-files
-    boot: ["i18n", "axios", "resources"],
+    boot: ["i18n", "axios", "resources", "session"],
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#css
     css: ["app.sass"],
@@ -43,10 +43,10 @@ module.exports = configure(function (ctx) {
       vueRouterMode: 'history', // available values: 'hash', 'history'
       env: ctx.dev
         ? {
-          API_URL: 'http://localhost:3333'
+          API_URL: 'https://happinessjar.com.br'
         }
         : {
-          API_URL: 'https://api.happyjar.com' // URL de produção (altere quando tiver)
+          API_URL: 'https://happinessjar.com.br' // URL de produção (altere quando tiver)
         },
       // vueRouterBase,
       // vueDevtools,
@@ -197,7 +197,7 @@ module.exports = configure(function (ctx) {
       builder: {
         // https://www.electron.build/configuration/configuration
 
-        appId: "happyjar",
+        appId: "Happiness Jar",
       },
     },
 

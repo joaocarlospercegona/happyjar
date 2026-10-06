@@ -67,7 +67,6 @@ export default {
         const resposta = await ApiService.momentos.criar(texto);
 
         if (resposta.data.sucesso) {
-          console.log('Momento salvo:', resposta.data.momento);
 
           // Verifica se deve mostrar enquete de sentimento (a cada 10 momentos)
           if (resposta.data.mostrarEnquete) {
@@ -77,6 +76,8 @@ export default {
           }
         }
       } catch (error) {
+        // Session failures are handled centrally, including redirecting to login.
+        if (error.code === 'ERR_CANCELED' || error.response?.status === 401) return;
         console.error('Erro ao salvar momento:', error);
 
         // Verifica se é erro de conexão

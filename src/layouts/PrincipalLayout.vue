@@ -10,7 +10,7 @@
           @click="toggleDrawer"
         >
           <q-avatar v-if="fotoUsuario" size="40px">
-            <img :src="fotoUsuario" />
+            <q-img :src="fotoUsuario" />
           </q-avatar>
           <q-icon v-else name="person" />
         </q-btn>
@@ -20,17 +20,16 @@
         v-model="leftDrawerOpen"
         side="left"
       >
-        <div class="row justify-end">
+        <div class="drawer-header row justify-end">
           <q-btn
             push
             color="white"
             text-color="grey"
-            style="margin-top: 15px; margin-right: 20px"
             round
             @click="toggleDrawer"
           >
             <q-avatar v-if="fotoUsuario" size="40px">
-              <img :src="fotoUsuario" />
+              <q-img :src="fotoUsuario" />
             </q-avatar>
             <q-icon v-else name="person" />
           </q-btn>
@@ -44,7 +43,7 @@
               Meus Dados
             </q-item>
             <q-separator color="primary" size="1px" />
-            <q-item clickable @click="navegarPara('/verFelicidade')"> Ver uma Felecidade </q-item>
+            <q-item clickable @click="navegarPara('/verFelicidade')"> Ver uma Felicidade </q-item>
             <q-separator color="primary" size="1px" />
             <q-item clickable @click="navegarPara('/termos')">
               Política de Privacidade
@@ -58,7 +57,7 @@
           <div class="col-5">
             <q-img src="images/logoprincipal.png" />
           </div>
-          <div class="q-py-lg col-8 text-center">Versão 1.0 - Maio/2024</div>
+          <div class="q-py-lg col-8 text-center">Versão 1.0 - Outubro/2026</div>
         </div>
       </q-drawer>
       <transition
@@ -139,5 +138,17 @@ export default defineComponent({
   display: flex;
   justify-content: flex-end;
   padding: 15px 20px;
+}
+
+.drawer-header {
+  padding: 15px 20px 0 0;
+}
+
+@media (max-width: 600px) {
+  .header-bar,
+  .drawer-header {
+    padding-top: 39px;
+    padding-top: calc(15px + max(env(safe-area-inset-top), 24px));
+  }
 }
 </style>

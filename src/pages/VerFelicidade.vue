@@ -65,7 +65,6 @@ export default defineComponent({
         carregando.value = true;
 
         const resposta = await ApiService.momentos.aleatorio();
-        console.log("Resposta do momento aleatório:", resposta);
         if (resposta.data.sucesso && resposta.data.momento) {
           momentoAleatorio.value = resposta.data.momento.texto;
         } else {

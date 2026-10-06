@@ -1,8 +1,8 @@
 {
-  "name": "happyjar",
+  "name": "Happiness Jar",
   "version": "0.0.1",
-  "description": "A HappyJar Project",
-  "productName": "HappyJar App",
+  "description": "A Happiness Jar Project",
+  "productName": "Happiness Jar App",
   "author": "joaocarlospercegona <joaokarlospercegona@gmail.com>",
   "private": true,
   "scripts": {
@@ -11,6 +11,7 @@
     "build": "quasar build"
   },
   "dependencies": {
+    "@capacitor/app": "^8.1.2",
     "@codetrix-studio/capacitor-google-auth": "^3.4.0-rc.4",
     "@quasar/extras": "^1.16.4",
     "axios": "^1.2.1",

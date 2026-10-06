@@ -25,6 +25,8 @@
 import { GoogleAuth } from '@codetrix-studio/capacitor-google-auth';
 import ApiService from 'src/services/api';
 
+const GOOGLE_CLIENT_ID = '678126218746-i1hp2urjurqsr8itfohcib6r6eq0top3.apps.googleusercontent.com';
+
 export default {
   data() {
     return {
@@ -37,7 +39,6 @@ export default {
     const usuario = localStorage.getItem('usuario');
 
     if (token && usuario) {
-      console.log('Usuário já logado, redirecionando...');
       this.$router.replace('/momento');
       return;
     }
@@ -46,14 +47,12 @@ export default {
     const isCapacitor = window.Capacitor && window.Capacitor.getPlatform() !== 'web';
 
     if (isCapacitor) {
-      console.log('Plataforma Capacitor detectada:', window.Capacitor.getPlatform());
       GoogleAuth.initialize({
-        clientId: '361004843516-a53aavo3qjmn4b80dm7fhuvkls7b433c.apps.googleusercontent.com',
+        clientId: GOOGLE_CLIENT_ID,
         scopes: ['profile', 'email'],
         grantOfflineAccess: true,
       });
     } else {
-      console.log('Usando modo web (navegador)');
       // Carrega script para navegador web
       this.loadGoogleScript();
     }
@@ -73,26 +72,19 @@ export default {
     async loginComGoogle() {
       try {
         this.carregando = true;
-        console.log('Iniciando login com Google...');
 
         // Verifica se está rodando no Capacitor (mobile) - não apenas web
         const isCapacitor = window.Capacitor && window.Capacitor.getPlatform() !== 'web';
 
         if (isCapacitor) {
-          console.log('Usando Capacitor Google Auth (mobile)');
           await this.loginComGoogleCapacitor();
         } else {
-          console.log('Usando Google Sign-In web (navegador)');
           await this.loginComGoogleWeb();
         }
 
       } catch (error) {
         console.error('Erro ao iniciar login:', error);
-        this.$q.notify({
-          message: 'Erro ao iniciar login com Google.',
-          color: 'negative',
-          icon: 'error'
-        });
+        this.notificarErroGoogle('Erro ao iniciar login com Google', error);
         this.carregando = false;
       }
     },
@@ -101,7 +93,6 @@ export default {
     async loginComGoogleCapacitor() {
       try {
         const result = await GoogleAuth.signIn();
-        console.log('Login Capacitor bem-sucedido:', result);
 
         // result contém: email, familyName, givenName, id, imageUrl, name, authentication
         await this.handleGoogleLoginSuccess({
@@ -115,16 +106,11 @@ export default {
         this.carregando = false;
 
         // Ignora se usuário cancelou o login
-        if (error.error === 'popup_closed_by_user' || error.message?.includes('popup_closed_by_user')) {
-          console.log('Usuário cancelou o login');
+        if (this.usuarioCancelouLogin(error)) {
           return;
         }
 
-        this.$q.notify({
-          message: 'Erro ao fazer login com Google.',
-          color: 'negative',
-          icon: 'error'
-        });
+        this.notificarErroGoogle('Erro no login nativo do Google', error);
       }
     },
 
@@ -162,7 +148,7 @@ export default {
 
         // Inicializa o Google Identity Services
         google.accounts.id.initialize({
-          client_id: '361004843516-a53aavo3qjmn4b80dm7fhuvkls7b433c.apps.googleusercontent.com',
+          client_id: GOOGLE_CLIENT_ID,
           callback: this.handleCredentialResponseWeb,
           auto_select: false,
         });
@@ -170,7 +156,6 @@ export default {
         // Abre o popup de login
         google.accounts.id.prompt((notification) => {
           if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
-            console.log('Prompt não exibido:', notification.getNotDisplayedReason());
             this.$q.notify({
               message: 'Não foi possível abrir o login do Google.',
               color: 'warning',
@@ -182,11 +167,7 @@ export default {
 
       } catch (error) {
         console.error('Erro no login web:', error);
-        this.$q.notify({
-          message: 'Erro ao carregar Google Sign-In.',
-          color: 'negative',
-          icon: 'error'
-        });
+        this.notificarErroGoogle('Erro ao carregar Google Sign-In', error);
         this.carregando = false;
       }
     },
@@ -207,12 +188,10 @@ export default {
     // Processa o login bem-sucedido (nativo ou web)
     async handleGoogleLoginSuccess(userData) {
       try {
-        console.log('Processando login do Google:', userData);
 
         // Envia o token para o backend validar e criar/logar usuário usando o serviço
         const resposta = await ApiService.auth.loginComGoogle(userData.idToken);
 
-        console.log('Login bem-sucedido, salvando dados do usuário', resposta);
         if (resposta.data.sucesso) {
           // Salva dados do usuário localmente
           const usuario = {
@@ -223,8 +202,6 @@ export default {
             acceptedTerms: resposta.data.usuario.acceptedTerms || false
           };
 
-          console.log('Usuário para salvar:', usuario);
-          console.log('acceptedTerms do backend:', resposta.data.usuario.acceptedTerms);
 
           localStorage.setItem('usuario', JSON.stringify(usuario));
           localStorage.setItem('token', resposta.data.token);
@@ -237,12 +214,9 @@ export default {
 
           setTimeout(() => {
             // Verifica se o usuário aceitou os termos
-            console.log('Verificando acceptedTerms:', usuario.acceptedTerms, typeof usuario.acceptedTerms);
             if (usuario.acceptedTerms === true) {
-              console.log('Indo para /momento');
               this.$router.push('/momento');
             } else {
-              console.log('Indo para /termos');
               this.$router.push('/termos');
             }
           }, 1000);
@@ -250,13 +224,84 @@ export default {
       } catch (error) {
         console.error('Erro no login:', error);
 
-        this.$q.notify({
-          message: error.response?.data?.erro || 'Erro ao fazer login com Google. Verifique se o backend está rodando.',
-          color: 'negative',
-          icon: 'error'
-        });
+        this.notificarErroGoogle('Erro ao validar login no backend', error);
       } finally {
         this.carregando = false;
+      }
+    },
+
+    usuarioCancelouLogin(error) {
+      const mensagem = String(error?.error || error?.message || '').toLowerCase();
+      return mensagem.includes('popup_closed_by_user') ||
+        mensagem.includes('cancelled') ||
+        mensagem.includes('canceled') ||
+        mensagem.includes('12501');
+    },
+
+    notificarErroGoogle(titulo, error) {
+      const detalhes = this.extrairDetalhesErro(error);
+
+      this.$q.notify({
+        message: `${titulo}: ${detalhes.mensagem}`,
+        caption: detalhes.tecnico,
+        color: 'negative',
+        icon: 'error',
+        multiLine: true,
+        timeout: 10000,
+        actions: [
+          { label: 'OK', color: 'white' }
+        ]
+      });
+    },
+
+    extrairDetalhesErro(error) {
+      const responseData = error?.response?.data;
+      const status = error?.response?.status || error?.status || error?.statusCode;
+      const codigo = error?.code || error?.error || responseData?.code || responseData?.codigo;
+      const mensagem = responseData?.erro ||
+        responseData?.error ||
+        responseData?.message ||
+        error?.message ||
+        error?.errorMessage ||
+        error?.error ||
+        'Erro desconhecido';
+
+      const tecnico = [
+        status ? `HTTP ${status}` : '',
+        codigo ? `Codigo: ${codigo}` : '',
+        this.mensagemOAuthConhecida(codigo, mensagem)
+      ].filter(Boolean).join(' | ');
+
+      return {
+        mensagem: String(mensagem),
+        tecnico: tecnico || this.serializarErro(error)
+      };
+    },
+
+    mensagemOAuthConhecida(codigo, mensagem) {
+      const codigoTexto = String(codigo || '').toLowerCase();
+      const texto = `${codigo || ''} ${mensagem || ''}`.toLowerCase();
+
+      if (codigoTexto === '10' || texto.includes('developer_error') || texto.includes('10:')) {
+        return 'Verifique o OAuth Android: package name, SHA-1/SHA-256 e clientId.';
+      }
+
+      if (codigoTexto === '7' || texto.includes('network_error') || texto.includes('7:')) {
+        return 'Verifique a internet do emulador.';
+      }
+
+      if (codigoTexto === '12500' || texto.includes('sign_in_failed') || texto.includes('12500')) {
+        return 'Falha na configuracao do Google Sign-In ou app OAuth.';
+      }
+
+      return '';
+    },
+
+    serializarErro(error) {
+      try {
+        return JSON.stringify(error, Object.getOwnPropertyNames(error)).slice(0, 300);
+      } catch (e) {
+        return String(error || 'Sem detalhes tecnicos');
       }
     },
 
@@ -351,4 +396,3 @@ export default {
 }
 
 </style>
-

@@ -15,7 +15,7 @@
     </div>
     <div class="login-footer">
       <q-img src="images/logoprincipal.png" class="footer-logo" />
-      <div class="version-text">Versão 1.0 - Maio/2024</div>
+      <div class="version-text">Versão 1.0 - Outubro/2026</div>
     </div>
   </q-page>
 </template>

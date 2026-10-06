@@ -2,30 +2,6 @@
   <q-page class="meus-dados-page">
     <div class="dados-container">
       <div class="dados-content">
-        <div class="row q-mb-md">
-          <div class="col-4">
-            <q-avatar v-if="fotoUsuario" size="80px" class="avatar-icon">
-              <img :src="fotoUsuario" />
-            </q-avatar>
-            <q-icon
-              v-else
-              name="person"
-              color="grey"
-              size="lg"
-              class="avatar-icon"
-            />
-          </div>
-          <div class="col-8 flex flex-center">
-            <q-btn
-              class="full-width"
-              color="primary"
-              label="Alterar"
-              icon="fas fa-save"
-              dense
-              no-caps
-            />
-          </div>
-        </div>
         <div>
           <span class="text-primary">Nome</span>
           <q-input
@@ -45,6 +21,7 @@
             v-model="dados.email"
             placeholder="email@exemplo.com"
             dense
+            :readonly="true"
             outlined
             color="primary"
             label-color="primary"
@@ -135,7 +112,6 @@ export default {
           dados.value.email = resposta.data.usuario.email;
           usuarioId.value = resposta.data.usuario.id;
 
-          console.log('Dados do usuário carregados:', resposta.data.usuario);
         }
       } catch (error) {
         console.error('Erro ao carregar dados:', error);
@@ -212,7 +188,6 @@ export default {
             icon: 'check_circle'
           });
 
-          console.log('Dados atualizados:', resposta.data.usuario);
         }
       } catch (error) {
         console.error('Erro ao atualizar dados:', error);
@@ -282,7 +257,6 @@ export default {
 
 .avatar-icon {
   border-radius: 50%;
-  padding: 15px;
   background-color: rgba(227, 221, 221, 0.981);
 }
 </style>

@@ -1,6 +1,6 @@
-# HappyJar App (happyjar)
+# Happiness Jar App (Happiness Jar)
 
-A HappyJar Project
+A Happiness Jar Project
 
 ## Install the dependencies
 ```bash

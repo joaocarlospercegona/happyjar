@@ -10,7 +10,7 @@ import axios from 'axios'
 
 // Configura a URL base do backend
 const api = axios.create({
-  baseURL: process.env.DEV ? 'http://localhost:3333' : 'https://api.happyjar.com'
+  baseURL: process.env.DEV ? 'http://localhost:3333' : 'https://api.Happiness Jar.com'
 })
 
 export default boot(({ app }) => {
